@@ -1,0 +1,38 @@
+name: FPGA site uptime monitor
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+    inputs:
+      force_notification:
+        description: Send a test notification even when status has not changed
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: dgwfpga-uptime-monitor
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    env:
+      SITE_URL: https://dgwfpga.cn
+      SERVERCHAN_SENDKEY: ${{ secrets.SERVERCHAN_SENDKEY }}
+      FORCE_NOTIFY: ${{ inputs.force_notification || 'false' }}
+    steps:
+      - name: Check out monitor
+        uses: actions/checkout@v4
+
+      - name: Check public site and notify on status changes
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/check-site.mjs
+
