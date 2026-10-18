@@ -29,7 +29,7 @@ jobs:
       FORCE_NOTIFY: ${{ inputs.force_notification || 'false' }}
     steps:
       - name: Check out monitor
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Check public site and notify on status changes
         env:
