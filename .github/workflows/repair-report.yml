@@ -1,0 +1,25 @@
+name: Local auto-repair report
+
+on:
+  repository_dispatch:
+    types: [local_repair_report]
+
+permissions:
+  contents: read
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    env:
+      SERVERCHAN_SENDKEY: ${{ secrets.SERVERCHAN_SENDKEY }}
+      REPAIR_STATUS: ${{ github.event.client_payload.status }}
+      REPAIR_SUMMARY: ${{ github.event.client_payload.summary }}
+      REPAIR_CHECKED_AT: ${{ github.event.client_payload.checked_at }}
+    steps:
+      - name: Check out monitor
+        uses: actions/checkout@v5
+
+      - name: Forward concise repair report to WeChat
+        run: node scripts/send-repair-report.mjs
+

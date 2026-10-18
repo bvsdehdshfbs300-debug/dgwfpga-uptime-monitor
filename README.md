@@ -9,6 +9,8 @@
 - 单次任务连续检查两轮，两轮均失败才判定离线。
 - 只在“正常 -> 离线”和“离线 -> 恢复”时通过 Server酱推送微信，持续离线时不会重复轰炸。
 - 监控状态保存在仓库中标题为 `[monitor-state] dgwfpga.cn` 的 Issue 里。
+- 本机守护程序确认故障后会运行公网启动器，并通过 `repository_dispatch` 把简要修复日志交给本仓库转发至微信。
+- 本机无需保存 Server酱 SendKey；密钥仍只存在于 GitHub Secret 中。
 
 ## 配置
 
